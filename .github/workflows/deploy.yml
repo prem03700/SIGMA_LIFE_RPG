@@ -27,6 +27,13 @@ jobs:
       - name: Setup Pages
         uses: actions/configure-pages@v5
 
+      - name: Replace deployment placeholders
+        run: |
+          PUBLIC_URL="https://${{ github.repository_owner }}.github.io/${{ github.event.repository.name }}"
+          BUILD_ID="${GITHUB_SHA::8}"
+          sed -i "s|__PUBLIC_URL__|${PUBLIC_URL}|g" public/index.html public/app.html
+          sed -i "s|__BUILD_ID__|${BUILD_ID}|g" public/index.html public/app.html
+
       - name: Upload Artifact
         uses: actions/upload-pages-artifact@v3
         with:
