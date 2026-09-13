@@ -6,6 +6,16 @@ const title = document.querySelector('#auth-title');
 const subtitle = document.querySelector('#auth-subtitle');
 const tabs = [...document.querySelectorAll('[data-auth-tab]')];
 const timezone = Intl.DateTimeFormat().resolvedOptions().timeZone || 'UTC';
+function readStoredProfile() {
+  try {
+    const value = localStorage.getItem('life-rpg-profile');
+    return value ? JSON.parse(value) : null;
+  } catch {
+    localStorage.removeItem('life-rpg-profile');
+    localStorage.removeItem('life-rpg-campaign');
+    return null;
+  }
+}
 
 function showMode(mode) {
   const isRegister = mode === 'register';
@@ -35,7 +45,7 @@ function submitAuth(form) {
   submit.disabled = true;
   submit.textContent = 'Synchronizing…';
   try {
-    const profile = JSON.parse(localStorage.getItem('life-rpg-profile') || 'null');
+    const profile = readStoredProfile();
     const email = payload.email.trim().toLowerCase();
     if (form === registerForm) {
       if (profile && profile.email !== email) throw new Error('This browser already has a campaign. Sign in with that email.');
