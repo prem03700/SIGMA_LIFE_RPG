@@ -80,12 +80,3 @@ The app uses native buttons/forms/dialogs, skip links, visible keyboard focus, A
 ## SEO
 
 The public page includes title/description metadata, canonical URL, Open Graph/Twitter metadata, SoftwareApplication JSON-LD, semantic headings, crawl rules, a generated sitemap, and fast local assets with no third-party font/script request.
-
-## Demo video plan
-
-Use `VIDEO_SCRIPT.md` to record a 90–180 second walkthrough that proves campaign setup, task creation, quest completion, level progression, and local persistence after refresh.
-
-## License
-
-MIT. See `LICENSE`.
-# SIGMA_RPG
