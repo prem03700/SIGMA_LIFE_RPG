@@ -1,4 +1,3 @@
-```js
 const dialog = document.querySelector('#auth-dialog');
 const registerForm = document.querySelector('#register-form');
 const loginForm = document.querySelector('#login-form');
@@ -139,4 +138,3 @@ document
   .forEach((node) => {
     observer.observe(node);
   });
-```
