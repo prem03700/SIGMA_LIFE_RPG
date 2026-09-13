@@ -176,6 +176,15 @@
           <span>◒</span>
           <span>Activity</span>
         </button>
+
+        <button
+          class="nav-item"
+          type="button"
+          data-view="profile"
+        >
+          <span>◎</span>
+          <span>Profile</span>
+        </button>
       </nav>
 
       <div class="sidebar-bottom">
@@ -394,6 +403,49 @@
 
             <h2>Every action leaves a trace.</h2>
 
+
+        <section id="view-profile" class="view-panel">
+          <div class="view-heading">
+            <div>
+              <p class="eyebrow">PLAYER PROFILE</p>
+              <h2 id="profile-heading">Your campaign identity.</h2>
+              <p>Your profile and progress are stored locally in this browser.</p>
+            </div>
+          </div>
+
+          <div class="profile-grid">
+            <article class="profile-identity panel">
+              <div class="profile-avatar" id="profile-avatar">01</div>
+              <p class="eyebrow">WAYFINDER</p>
+              <h3 id="profile-name">Player</h3>
+              <p id="profile-email" class="profile-muted">Local campaign</p>
+              <div class="profile-line"><span>LEVEL</span><strong id="profile-level">1</strong></div>
+              <div class="profile-line"><span>GOLD</span><strong id="profile-gold">0</strong></div>
+              <div class="profile-line"><span>STREAK</span><strong id="profile-streak">0 days</strong></div>
+            </article>
+
+            <article class="profile-progress panel">
+              <p class="eyebrow">PROGRESSION</p>
+              <div class="profile-stat-row"><span>Experience</span><strong id="profile-xp">0 XP</strong></div>
+              <div class="xp-bar large"><span id="profile-xp-progress" style="width:0%"></span></div>
+              <p id="profile-xp-copy" class="profile-muted">0 XP until the next level</p>
+              <div class="profile-stat-row"><span>Equipped badge</span><strong id="profile-badge">None</strong></div>
+              <div class="profile-stat-row"><span>Theme</span><strong id="profile-theme">Void</strong></div>
+            </article>
+
+            <article class="profile-attributes panel">
+              <p class="eyebrow">ATTRIBUTES</p>
+              <div id="profile-attribute-list" class="profile-attribute-list"></div>
+            </article>
+
+            <article class="profile-privacy panel">
+              <p class="eyebrow">LOCAL DATA</p>
+              <h3>Your campaign stays on this device.</h3>
+              <p class="profile-muted">No account server, camera feed, or analytics service is connected to this profile. Future hardware features will require separate permission.</p>
+              <button class="button secondary compact" id="profile-export" type="button">Export campaign</button>
+            </article>
+          </div>
+        </section>
             <p>
               Local history of your campaign.
             </p>
