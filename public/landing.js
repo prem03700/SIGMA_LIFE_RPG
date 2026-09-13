@@ -7,14 +7,10 @@ const subtitle = document.querySelector('#auth-subtitle');
 const tabs = [...document.querySelectorAll('[data-auth-tab]')];
 const timezone = Intl.DateTimeFormat().resolvedOptions().timeZone || 'UTC';
 function readStoredProfile() {
-  try {
-    const value = localStorage.getItem('life-rpg-profile');
-    return value ? JSON.parse(value) : null;
-  } catch {
-    localStorage.removeItem('life-rpg-profile');
-    localStorage.removeItem('life-rpg-campaign');
-    return null;
-  }
+  const email = localStorage.getItem('life-rpg-email');
+  const displayName = localStorage.getItem('life-rpg-display-name');
+  if (!email || !displayName) return null;
+  return { email, displayName, timezone: localStorage.getItem('life-rpg-timezone') || timezone };
 }
 
 function showMode(mode) {
@@ -22,7 +18,7 @@ function showMode(mode) {
   registerForm.classList.toggle('hidden', !isRegister);
   loginForm.classList.toggle('hidden', isRegister);
   title.textContent = isRegister ? 'Begin your campaign' : 'Resume your campaign';
-  subtitle.textContent = isRegister ? 'Create a secure account. Your progress follows you across devices.' : 'Your quests, XP, streak and inventory are waiting.';
+  subtitle.textContent = isRegister ? 'Create a local campaign saved in this browser.' : 'Your local quests, XP, streak and inventory are waiting.';
   tabs.forEach((tab) => tab.setAttribute('aria-selected', String(tab.dataset.authTab === mode)));
   status.textContent = '';
 }
@@ -39,17 +35,20 @@ dialog.addEventListener('click', (event) => { if (event.target === dialog) dialo
 function submitAuth(form) {
   const submit = form.querySelector('button[type="submit"]');
   const payload = Object.fromEntries(new FormData(form).entries());
-  payload.timezone = timezone;
   status.textContent = '';
   const previous = submit.textContent;
   submit.disabled = true;
-  submit.textContent = 'Synchronizing…';
+  submit.textContent = 'Opening…';
   try {
     const profile = readStoredProfile();
     const email = payload.email.trim().toLowerCase();
     if (form === registerForm) {
       if (profile && profile.email !== email) throw new Error('This browser already has a campaign. Sign in with that email.');
-      localStorage.setItem('life-rpg-profile', JSON.stringify({ email, displayName: payload.displayName.trim(), timezone }));
+      localStorage.setItem('life-rpg-email', email);
+      localStorage.setItem('life-rpg-display-name', payload.displayName.trim());
+      localStorage.setItem('life-rpg-timezone', timezone);
+      localStorage.removeItem('life-rpg-profile');
+      localStorage.removeItem('life-rpg-campaign');
     } else if (!profile || profile.email !== email) {
       throw new Error('No campaign found for that email in this browser.');
     }
