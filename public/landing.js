@@ -6,6 +6,10 @@ const title = document.querySelector('#auth-title');
 const subtitle = document.querySelector('#auth-subtitle');
 const tabs = [...document.querySelectorAll('[data-auth-tab]')];
 
+/* -------------------------------------------------------
+   AUTH UI
+------------------------------------------------------- */
+
 function showMode(mode) {
   const isRegister = mode === 'register';
 
@@ -17,8 +21,8 @@ function showMode(mode) {
     : 'Resume your campaign';
 
   subtitle.textContent = isRegister
-    ? 'Create a secure account. Your progress follows you across devices.'
-    : 'Your quests, XP, streak and inventory are waiting.';
+    ? 'Create your character and begin your campaign.'
+    : 'Enter your credentials to continue your campaign.';
 
   tabs.forEach((tab) => {
     tab.setAttribute(
@@ -45,7 +49,10 @@ function openAuth(mode) {
   });
 }
 
-/* Open authentication dialog */
+/* -------------------------------------------------------
+   OPEN AUTH MODAL
+------------------------------------------------------- */
+
 document
   .querySelectorAll('[data-auth-mode]')
   .forEach((button) => {
@@ -54,71 +61,262 @@ document
     });
   });
 
-/* Switch between Register and Login */
+/* -------------------------------------------------------
+   SWITCH LOGIN / REGISTER
+------------------------------------------------------- */
+
 tabs.forEach((tab) => {
   tab.addEventListener('click', () => {
     showMode(tab.dataset.authTab);
   });
 });
 
-/* Close authentication dialog */
+/* -------------------------------------------------------
+   CLOSE MODAL
+------------------------------------------------------- */
+
 document
   .querySelector('[data-close-dialog]')
   .addEventListener('click', () => {
     dialog.close();
   });
 
-/* Close dialog when clicking outside the modal */
 dialog.addEventListener('click', (event) => {
   if (event.target === dialog) {
     dialog.close();
   }
 });
 
-/*
- * Authentication
- *
- * IMPORTANT:
- * There is currently NO backend connected.
- *
- * Therefore:
- * - No fetch()
- * - No API calls
- * - No fake endpoints
- * - No JSON parsing
- * - No fake account creation
- */
+/* -------------------------------------------------------
+   LOCAL ACCOUNT SYSTEM
+   GitHub Pages has no backend.
 
-function showBackendMessage(form) {
-  const submit = form.querySelector('button[type="submit"]');
+   Accounts are stored only in this browser using
+   localStorage.
 
-  submit.disabled = true;
+   This is suitable for frontend/demo testing only.
+------------------------------------------------------- */
 
-  status.textContent =
-    'The server is not connected yet. Account creation will be available after the backend is deployed.';
+const ACCOUNT_KEY = 'life_rpg_account';
+const SESSION_KEY = 'life_rpg_session';
 
-  status.setAttribute('data-type', 'info');
+function getAccount() {
+  const account = localStorage.getItem(ACCOUNT_KEY);
 
-  setTimeout(() => {
-    submit.disabled = false;
-  }, 1000);
+  if (!account) {
+    return null;
+  }
+
+  try {
+    return JSON.parse(account);
+  } catch {
+    return null;
+  }
 }
 
-/* Create Account */
+function saveAccount(account) {
+  localStorage.setItem(
+    ACCOUNT_KEY,
+    JSON.stringify(account)
+  );
+}
+
+function createSession(account) {
+  localStorage.setItem(
+    SESSION_KEY,
+    JSON.stringify({
+      loggedIn: true,
+      email: account.email,
+      displayName: account.displayName,
+      loginTime: new Date().toISOString()
+    })
+  );
+}
+
+/* -------------------------------------------------------
+   CREATE ACCOUNT
+------------------------------------------------------- */
+
 registerForm.addEventListener('submit', (event) => {
   event.preventDefault();
 
-  showBackendMessage(registerForm);
+  const formData = new FormData(registerForm);
+
+  const displayName = String(
+    formData.get('displayName') || ''
+  ).trim();
+
+  const email = String(
+    formData.get('email') || ''
+  ).trim().toLowerCase();
+
+  const password = String(
+    formData.get('password') || ''
+  );
+
+  /* Validation */
+
+  if (displayName.length < 2) {
+    status.textContent =
+      'Player name must contain at least 2 characters.';
+    return;
+  }
+
+  if (!email) {
+    status.textContent =
+      'Please enter your email address.';
+    return;
+  }
+
+  if (password.length < 8) {
+    status.textContent =
+      'Password must contain at least 8 characters.';
+    return;
+  }
+
+  /* Check existing account */
+
+  const existingAccount = getAccount();
+
+  if (existingAccount) {
+    status.textContent =
+      'An account already exists in this browser. Please sign in instead.';
+    return;
+  }
+
+  /* Create local account */
+
+  const account = {
+    displayName,
+    email,
+
+    /*
+     * Demo only.
+     * Do NOT use this approach for a production application.
+     */
+    password,
+
+    createdAt: new Date().toISOString(),
+
+    character: {
+      level: 1,
+      xp: 0,
+      gold: 0,
+      streak: 0,
+
+      attributes: {
+        intellect: 0,
+        strength: 0,
+        discipline: 0,
+        vitality: 0
+      },
+
+      quests: [],
+      inventory: [],
+      badges: []
+    }
+  };
+
+  saveAccount(account);
+  createSession(account);
+
+  status.textContent =
+    'Character created successfully!';
+
+  status.setAttribute(
+    'data-type',
+    'success'
+  );
+
+  const submit = registerForm.querySelector(
+    'button[type="submit"]'
+  );
+
+  submit.disabled = true;
+  submit.textContent = 'Campaign created ✓';
+
+  /*
+   * Open the application page after a short delay.
+   *
+   * app.html is used instead of /app because this
+   * project is hosted on GitHub Pages.
+   */
+  setTimeout(() => {
+    window.location.href = './app.html';
+  }, 700);
 });
 
-/* Sign In */
+/* -------------------------------------------------------
+   SIGN IN
+------------------------------------------------------- */
+
 loginForm.addEventListener('submit', (event) => {
   event.preventDefault();
 
-  showBackendMessage(loginForm);
+  const formData = new FormData(loginForm);
+
+  const email = String(
+    formData.get('email') || ''
+  ).trim().toLowerCase();
+
+  const password = String(
+    formData.get('password') || ''
+  );
+
+  const account = getAccount();
+
+  /* No account */
+
+  if (!account) {
+    status.textContent =
+      'No character exists in this browser. Create an account first.';
+    return;
+  }
+
+  /* Wrong email */
+
+  if (account.email !== email) {
+    status.textContent =
+      'Email or password is incorrect.';
+    return;
+  }
+
+  /* Wrong password */
+
+  if (account.password !== password) {
+    status.textContent =
+      'Email or password is incorrect.';
+    return;
+  }
+
+  /* Successful login */
+
+  createSession(account);
+
+  status.textContent =
+    'Welcome back, ' + account.displayName + '!';
+
+  status.setAttribute(
+    'data-type',
+    'success'
+  );
+
+  const submit = loginForm.querySelector(
+    'button[type="submit"]'
+  );
+
+  submit.disabled = true;
+  submit.textContent = 'Entering campaign ✓';
+
+  setTimeout(() => {
+    window.location.href = './app.html';
+  }, 700);
 });
 
-/* Scroll reveal animations */
+/* -------------------------------------------------------
+   SCROLL REVEAL ANIMATIONS
+------------------------------------------------------- */
+
 const observer = new IntersectionObserver(
   (entries) => {
     entries.forEach((entry) => {
