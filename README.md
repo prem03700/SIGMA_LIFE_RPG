@@ -15,6 +15,18 @@ The project intentionally avoids a generic dashboard aesthetic. The public page 
 - SEO metadata, Open Graph/Twitter metadata, JSON-LD, semantic page structure, and lightweight local assets.
 - Automated unit tests for the progression and reward rules.
 
+## Future hardware roadmap
+
+Hardware support is planned, but is not implemented in the current static release. Possible future features include:
+
+- Opt-in camera-based focus, posture, or movement quests processed on the device.
+- Wearable summaries for steps, workouts, sleep, or heart-rate data.
+- Local desk or room sensors that create focus-session events.
+- Optional lights, haptics, or companion-device feedback for quest completion.
+- Local export/import so hardware history remains portable.
+
+Privacy is a design requirement: raw camera footage and sensor data should remain on the device, with explicit permissions, visible active indicators, pause/delete controls, and no automatic cloud upload.
+
 ## Stack
 
 This submission deliberately uses a small dependency surface:
