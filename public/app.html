@@ -1,4 +1,4 @@
-<!doctype html><html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><meta name="theme-color" content="#090b11"><meta name="robots" content="noindex,nofollow"><title>Command Center — Life RPG</title><link rel="icon" href="./favicon.svg" type="image/svg+xml"><link rel="stylesheet" href="./styles.css"><script defer src="./app.js"></script>
+<!doctype html><html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><meta name="theme-color" content="#090b11"><meta name="robots" content="noindex,nofollow"><title>Command Center — Life RPG</title><link rel="icon" href="favicon.svg" type="image/svg+xml"><link rel="stylesheet" href="styles.css"><script defer src="app.js"></script>
 <style id="liferpg-badge-polish">
 /* Loot Vault badge polish — isolated to badge cards only. */
 #shop-grid [data-liferpg-badge] {
@@ -139,7 +139,7 @@
 
   <div class="app-shell" id="app-shell" aria-busy="true">
     <aside class="sidebar" aria-label="Life RPG navigation">
-      <a class="brand app-brand" href="./">
+      <a class="brand app-brand" href="index.html">
         <span class="brand-mark" aria-hidden="true">
           <span></span>
         </span>
@@ -395,7 +395,7 @@
             <h2>Every action leaves a trace.</h2>
 
             <p>
-              Server-persisted history of your campaign.
+              Local history of your campaign.
             </p>
           </div>
         </div>
@@ -428,7 +428,7 @@
     </h2>
 
     <p>
-      Define one clear action. Rewards are calculated by the server.
+      Define one clear action. Rewards are calculated in your browser and saved locally.
     </p>
 
     <form
@@ -556,8 +556,7 @@
   <script id="liferpg-badge-polish-script">
     /*
       Badge presentation override.
-      IMPORTANT: the visible costs below must also be mirrored in the server/shop
-      catalog before production if purchases are server-authoritative.
+      The visible costs are mirrored in the local browser shop catalog.
     */
     (() => {
       const BADGES = {

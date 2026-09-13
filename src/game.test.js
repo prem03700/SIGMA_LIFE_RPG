@@ -17,7 +17,7 @@ test('progression exposes next-level progress', () => {
   assert.equal(value.level, 2);
   assert.ok(value.progressPercent > 0 && value.progressPercent < 100);
 });
-test('rewards stay server-owned and scale', () => {
+test('rewards scale by difficulty', () => {
   assert.deepEqual(rewardForDifficulty('easy'), { xp: 20, gold: 8 });
   assert.ok(rewardForDifficulty('epic').xp > rewardForDifficulty('hard').xp);
   assert.equal(attributeGain(70), 35);

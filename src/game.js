@@ -1,4 +1,4 @@
-/** Pure game rules. The backend is authoritative for all rewards. */
+/** Pure game rules shared by the local campaign experience and its tests. */
 export const DIFFICULTY_REWARDS = Object.freeze({
   easy: { xp: 20, gold: 8 },
   medium: { xp: 40, gold: 15 },
